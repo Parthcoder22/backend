@@ -14,6 +14,9 @@ app.get("/login", (req, res) => {
 app.get("/upskill", (req, res) => {
     res.send("<h1>let's upskilling myself</h1>")
 })
+app.get("/signup", (req, res) => {
+    res.send("signup")
+})
 
 app.listen(process.env.PORT, () => {
     console.log(`Example app listing on ${port}`);
