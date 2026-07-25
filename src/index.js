@@ -1,23 +1,24 @@
-require("dotenv").config()
-const express = require("express")
+import dns from "dns";
+// Force Node.js to use reliable public DNS servers
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
-const app = express()
+import dotenv from "dotenv"
+import connectDB from "./db/index.js"
 
-const port = 3000
-
-app.get("/", (req, res) => {
-    res.send("I am at homepage")
-})
-app.get("/login", (req, res) => {
-    res.send("I am at login page ")
-})
-app.get("/upskill", (req, res) => {
-    res.send("<h1>let's upskilling myself</h1>")
-})
-app.get("/signup", (req, res) => {
-    res.send("signup")
+dotenv.config({
+    path: "./.env"
 })
 
-app.listen(process.env.PORT, () => {
-    console.log(`Example app listing on ${port}`);
+connectDB().then(()=>{
+
+    app.on("error",(error)=>{
+        console.log("error : ",error);
+        throw error
+    })
+
+    app.listen(`server is running at port ${process.env.PORT || 8000}`)
+})
+.catch((err)=>{
+    console.log(`mongo DB connection failed !!! ${err}`);
+    
 })
