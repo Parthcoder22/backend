@@ -3,7 +3,7 @@ import { asyncHandler } from "../utils/ayncHandler.js"
 import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/User.models.js";
 
-export const verifyJWT = asyncHandler((req, _, next) => {
+export const verifyJWT = asyncHandler(async (req, _, next) => {
     try {
         const accessToken = req.cookies?.accessToken || req.header("authorization")?.replace("bearer ", "");
 
@@ -11,9 +11,16 @@ export const verifyJWT = asyncHandler((req, _, next) => {
             throw new ApiError(401, "unauthorized user");
         }
 
-        const decodedToken = jwt.verify(accessToken, process.env.chaiaurcode)
+        const decodedToken = jwt.verify(accessToken, "chaiaurcode");
 
-        const user = await User.findById(decodedToken?._id).select("-password -refreshToken")
+        const id = decodedToken?._id
+
+        const user = await User.findById(id);
+
+        console.log(decodedToken);
+        console.log(id);
+        console.log(user);
+
 
         if (!user) {
             throw new ApiError(401, "Invalid Access Token.")
